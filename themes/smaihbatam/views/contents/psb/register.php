@@ -1,0 +1,109 @@
+<div class="wrapper" style="margin-top:-35px;">
+	<div class="column c-67 clearfix"  style="padding-right:0px;">
+		<div class="box contactUs ">
+			<h4><span>Form Pendaftaran Siswa Baru </span></h4>
+            <?php
+            //Biaya Pendaftaran
+            $awal = $this->init->getSettingVal('psb_reg_price');
+            $random = random_string('numeric',3);
+            $akhir = $awal+$random;
+
+            $nmdepan = ($this->session->flashdata('reg_data_firstname')!='')?$this->session->flashdata('reg_data_firstname'):'';
+            $nmbelakang = ($this->session->flashdata('reg_data_lastname')!='')?$this->session->flashdata('reg_data_lastname'):'-';
+            $phone = ($this->session->flashdata('reg_data_telpon')!='')?$this->session->flashdata('reg_data_telpon'):'';
+            $mail = ($this->session->flashdata('reg_data_email')!='')?$this->session->flashdata('reg_data_email'):'';
+            $biaya =  ($this->session->flashdata('reg_data_biaya')!='')?$this->session->flashdata('reg_data_biaya'):$akhir;
+            $ref   =  ($this->session->flashdata('reg_data_ref')!='')?$this->session->flashdata('reg_data_ref'):'';
+            $refother  =  ($this->session->flashdata('reg_data_refother')!='')?$this->session->flashdata('reg_data_refother'):'';
+            ?>
+			<div class="boxInfo contactForm" style="padding:7px;">
+				<form id="frm_register" method="post" action="">
+					<div style="width:100%;">
+						<label style="width:20%;">Nama Lengkap</label>
+                        <input style="width:40%;" id="psb_firstName" name="psb_firstName" type="text" placeholder="Nama Depan" value="<?php echo $nmdepan; ?>" />
+						<input style="width:35%;" id="psb_lastName" name="psb_lastName" type="text" placeholder="Nama Belakang" value="<?php echo $nmbelakang; ?>"/>
+                    </div>
+					<div style="width:100%;">
+                        <label style="width:20%;">Telp/HP. </label>
+                        <input style="width:40%;" id="psb_phone" name="psb_phone" type="text" placeholder="Telp./HP yang bisa dihubungi" value="<?php echo $phone; ?>"/>
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:20%;">Email </label>
+                        <input style="width:40%;" id="psb_mail_addr" name="psb_mail_addr" type="text" placeholder="Alamat email yang aktif" value="<?php echo $mail; ?>"/>
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:20%;">&nbsp;</label>
+                        <label style="width:76%;">Mengetahui Informasi PPDB SMAIH dari? </label>
+                    </div>
+                    <div style="width:100%;margin-top:-15px;">
+                        <label style="width:20%;">Referensi</label>
+                        <label style="width:70%;">1. Teman, 2. Saudara, 3. Media Sosial 4. Lain-lain </label>
+                        <input style="width:6%; margin-left:-150px;height:20px;" id="psb_ref" name="psb_ref" type="text"  onkeydown="return numbersonly(this, event);" value="<?php echo $ref; ?>"/>
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:20%;">&nbsp;</label>
+                        <input style="width:40%;" id="psb_ref_other" name="psb_ref_other" type="text" value="<?php echo $refother; ?>" />
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:20%;">Biaya Pendaftaran</label>
+                        <input id="hpsb_reg_fee" name="hpsb_reg_fee" rel="hpsb_reg_fee|<?php echo $biaya; ?>" type="hidden"/>
+                        <input style="width:15%;text-align:center;" id="psb_reg_fee" name="psb_reg_fee" type="text" readonly/>
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:20%;">&nbsp;</label>
+                        <div style="height:50px;width:70%;"><img id="captchagbr" style="height:50px;margin-left:-55px;" src="<?php echo base_url('psb/captcha'); ?>"> <a href="javascript:void(0);" id="reload-captcha" style="font-size:12px;">Reload</a></div>
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:20%;">Kode Keamanan</label>
+                        <?php $placeholder = "Masukan kode diatas..."?>
+                        <input style="width:25%;" type="text" name="captcha" id="captcha" placeholder="<?php echo $placeholder; ?>" class="form-control">
+                        <?php if($this->session->flashdata('reg_match_captcha')==1){ echo '<span style="font-size:10px;color:red;width:35%;">Kode keamanan yang anda masukan tidak cocok!</span>';} ?>
+                    </div>
+                    <div style="width:100%;">
+                        <label style="width:100%;"><input type="checkbox" id="psb_cb_ok" value="1" style="width:12px;height:12px;"> Semua data yang dimasukan / diinputkan dapat dipertanggungjawabkan keasliannya.  </label>
+                    </div>
+                    
+                    <div>
+						<input id="psbRegSubmit" class="submit" type="submit" value="Daftar"/>
+					</div>
+				</form>
+                <!-- <p id="contactSuccess" class="hidden">Your message was successfuly sent! Please wait up to 24hrs until we can contact you back!</p>
+				<p id="contactError" class="hidden">Please complete all the required fields properly!</p> -->
+			</div>
+		</div>
+	</div>
+	<div class="searchCourse column c-33 clearfix">
+        <p><img src="<?php echo base_url() ?>themes/smaihbatam/assets/img/icons/calendar-512.png" style="margin-top:-11px;margin-left:-10px;width:50px; height:50px;" align="left">&nbsp;&nbsp;&nbsp;Agenda Kegiatan</p>
+        <div class="box" style="padding:0px 0px 0px 0px;">
+            <div class="boxInfo" style="padding:0px 0px 0px 0px;"> 
+                <div class="accordion" style="margin-top:-10px;">
+                    <?php 
+                    if(count($psb_agenda)>0){
+                        foreach ($psb_agenda as $agenda) {
+                            echo '<div class="box">
+                            <a href="#">'.$agenda['agenda_title'].'</a>
+                            <div class="boxInfo acText" style="padding:0px 1px 0px 0px;">
+                            <p style="background-color:transparent;font-size:12px;font-weight:normal;"> 
+                            Waktu &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.tgl_indo(date('Y-m-d', strtotime($agenda['agenda_datetime']))).'<br>
+                            Tempat &nbsp;&nbsp;&nbsp;: '.$agenda['agenda_place'].'<br>
+                            '.$agenda['agenda_desc'].'    
+                            </p>
+                            </div>
+                            </div>';
+                        }
+                    }else{
+                        echo '<div>
+                        <p style="background-color:transparent;
+                        font-size:12px;font-weight:normal;
+                        margin:19px auto;
+                        text-align: center;">
+                        Maaf, data agenda belum ada.
+                        </p>
+                        </div>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
